@@ -57,7 +57,6 @@ func SignUp() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr.Error()})
 			return
 		}
-
 		count, err := userCollection.CountDocuments(ctx, bson.M{"email": user.Email})
 		defer cancel()
 		if err != nil {
@@ -164,7 +163,6 @@ func GetUsers() gin.HandlerFunc {
 			recordPerPage = 10
 		}
 		page, err1 := strconv.Atoi(c.Query("page"))
-
 		if err1 != nil || page < 1 {
 			page = 1
 		}
@@ -172,7 +170,7 @@ func GetUsers() gin.HandlerFunc {
 		startIndex := (page - 1) * recordPerPage
 		startIndex, err = strconv.Atoi(c.Query("startIndex"))
 
-		matchStage := bson.D{{"Smatch", bson.D{{}}}}
+		matchStage := bson.D{{"$match", bson.D{{}}}}
 		groupStage := bson.D{{"$group", bson.D{
 			{"_id", bson.D{{"_id", "null"}}},
 			{"total_count", bson.D{{"$sum", 1}}},
@@ -183,17 +181,16 @@ func GetUsers() gin.HandlerFunc {
 				{"total_count", 1},
 				{"user_items", bson.D{{"$slice", []interface{}{"$data", startIndex, recordPerPage}}}}}}}
 		result, err := userCollection.Aggregate(ctx, mongo.Pipeline{
-			matchStage, groupStage, projectStage,
-		})
+			matchStage, groupStage, projectStage})
 		defer cancel()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error occured while listing users"})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error occured while listing user items"})
 		}
-		var allUsers []bson.M
-		if err = result.All(ctx, &allUsers); err != nil {
+		var allusers []bson.M
+		if err = result.All(ctx, &allusers); err != nil {
 			log.Fatal(err)
 		}
-		c.JSON(http.StatusOK, allUsers[0])
+		c.JSON(http.StatusOK, allusers[0])
 	}
 }
 
