@@ -1,47 +1,55 @@
 # go-jwt-authentication
 
-A simple JWT authentication for users logging in and signing up
+This repository provides a simple JWT authentication system for user login and sign up. It includes user validation by checking for existing users and is built using Gin-Gonic.
 
-Contains validation as well by checking for existing users
+## Architecture
 
-Works using Gin-Gonic
+The application follows the following architecture:
 
-There will be 2 main routes:
+```
 routes
-|______auth
-    |______user
+|__auth
+   |__user
 
-# Architecture - Routes | Model | Controller
-- Create Architecture of the application
+Controllers - Contains all the control logic of the application
+Database - Contains the connection to the local MongoDB
+Helpers - Utility functions and helper modules
+Models - Contains model structures for the application
+Routes - Contains routes for routing requests to the appropriate controllers
+main.go - Entry point of the application
+```
 
-|_controllers - Contains all the control logic of the application
-|_database - Contains connection towards local mongo db
-|_helpers
-|_models - Contains model structures for the required application
-|_routes - Contains routes for routing requests towards required controllers
-|_main.go
+## Step 1 - Build User Model
 
+To begin, create the user model:
 
-# Step 1 - Build user model
+```
+controllers
+database
+helpers
+routes
+main.go
+models
+  |_ userModel.go
+```
 
-|_controllers
-|_database 
-|_helpers
-|_models
-|   |____userModel.go
-|_routes
-|_main.go
+## Step 2 - Initialize Router in main.go
 
-# Step 2 - Initialise router in main.go
+Next, initialize the router in the `main.go` file.
 
-# Step 3 - Define routers under routes folder
+## Step 3 - Define Routers under the Routes folder
 
-|_controllers
-|_database 
-|_helpers
-|_models
-|   |____userModel.go
-|_routes
-    |___authRouter.go
-    |___userRouter.go
-|_main.go
+Define the routers for authentication and user management in separate files under the `routes` folder:
+
+```
+controllers
+database
+helpers
+routes
+  |_ authRouter.go
+  |_ userRouter.go
+main.go
+models
+```
+
+This structure organizes the application's components in a clear and maintainable manner, separating concerns and promoting modularity.
